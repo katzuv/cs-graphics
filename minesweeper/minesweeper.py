@@ -50,6 +50,7 @@ class Board(GridLayout):
         self.exposed = [[False] * self.cols for _ in range(self.cols)]
 
         self.insert_bombs()  # choose the bombs in the game
+        self.insert_numbers()
         # for i in self.board:
         #   self.add_widget(i)#add the cells on the board (the View board)'''
         l = Label(text='num bombs', font_size='20sp')
@@ -70,6 +71,15 @@ class Board(GridLayout):
             self.add_widget(cell)
 
     def insert_numbers(self):
+        for row, column in product(range(self.cols), range(self.cols)):
+            # for inner_row, inner_column in product(range(self.cols), range(self.cols)):
+            current_cell = self.board[row][column]
+            if not current_cell.is_bomb():
+                for inner_row, inner_column in product(range(max(0, current_cell.row), min(self.cols, current_cell.row + 3)),
+                                                       range(max(0, current_cell.column), min(self.cols, current_cell.column + 3))):
+                    if self.board[inner_row][inner_column].is_bomb():
+                        current_cell.number += 1
+
     def change_cell(self, cell):
         print "Hello, World!"
         # cell.num = 1000
