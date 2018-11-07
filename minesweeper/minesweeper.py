@@ -41,7 +41,7 @@ class Board(GridLayout):
         self.cols = number_of_lines  # number of columns in the gridLayout
         self.board = [[None] * self.cols for _ in range(self.cols)]  # all the cells in the board
 
-        self.random_bombs()  # choose the bombs in the game
+        self.insert_bombs()  # choose the bombs in the game
         # for i in self.board:
         #   self.add_widget(i)#add the cells on the board (the View board)'''
         l = Label(text='num bombs', font_size='20sp')
@@ -61,6 +61,7 @@ class Board(GridLayout):
             self.board.append(cell)
             self.add_widget(cell)
 
+    def insert_numbers(self):
     def change_cell(self, cell):
         print "Hello, World!"
         # cell.num = 1000
