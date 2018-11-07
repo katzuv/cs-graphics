@@ -24,6 +24,9 @@ class Cell(ButtonBehavior, Image):
         bomb = 'bomb.jpg'
         self.source = normal
 
+    def is_bomb(self):
+        return self.number == self.BOMB_NUMBER
+
     def on_press(self):
         logging.info('{}, {} pressed - number {}'.format(self.row, self.column, self.number))
         if self.number == self.BOMB_NUMBER:
