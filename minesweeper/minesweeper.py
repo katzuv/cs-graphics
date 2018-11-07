@@ -96,4 +96,7 @@ class TestApp(App):
 
 
 if __name__ == '__main__':
-    TestApp().run()
+    try:
+        TestApp().run()
+    except SystemExit:
+        print 'Game over :('
