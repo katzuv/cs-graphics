@@ -9,6 +9,8 @@ from kivy.uix.label import Label
 
 
 class Cell(ButtonBehavior, Image):
+    BOMB_NUMBER = -1
+
     def __init__(self, line, column, number=0):
         # num = -1  is a bomb in the cell , if not the number in the cell is the number of the bombs around the cell.
 
