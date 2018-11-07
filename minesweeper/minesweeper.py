@@ -59,7 +59,7 @@ class Board(GridLayout):
             else:
                 cell = Cell(row, column)
                 # self.bind(on_press=self.change_cell(cell))
-            self.board.append(cell)
+            self.board[row][column] = cell
             self.add_widget(cell)
 
     def insert_numbers(self):
