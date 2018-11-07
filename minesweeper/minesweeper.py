@@ -10,6 +10,7 @@ from kivy.uix.label import Label
 
 class Cell(ButtonBehavior, Image):
     BOMB_NUMBER = -1
+    BOMB_PRESSED = False
 
     def __init__(self, line, column, number=0):
         # num = -1  is a bomb in the cell , if not the number in the cell is the number of the bombs around the cell.
@@ -28,9 +29,12 @@ class Cell(ButtonBehavior, Image):
         return self.number == self.BOMB_NUMBER
 
     def on_press(self):
+        if self.BOMB_PRESSED:
+            return
         logging.info('{}, {} pressed - number {}'.format(self.row, self.column, self.number))
         if self.number == self.BOMB_NUMBER:
             self.source = 'bomb.jpg'
+            self.BOMB_PRESSED = True
         else:
             self.source = 'numbers\{}.png'.format(self.number)
 
