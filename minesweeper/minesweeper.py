@@ -91,7 +91,7 @@ class Board(GridLayout):
 
 class TestApp(App):
     def build(self):
-        self.title = 'based graphics'
+        self.title = 'Minesweeper'
         return Board()
 
 
