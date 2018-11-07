@@ -40,6 +40,7 @@ class Board(GridLayout):
         self.counters = 0  # counting the num of bombs to tell later to the player
         self.cols = number_of_lines  # number of columns in the gridLayout
         self.board = [[None] * self.cols for _ in range(self.cols)]  # all the cells in the board
+        self.exposed = [[False] * self.cols for _ in range(self.cols)]
 
         self.insert_bombs()  # choose the bombs in the game
         # for i in self.board:
