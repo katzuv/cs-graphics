@@ -16,7 +16,7 @@ class Cell(ButtonBehavior, Image):
 
         ButtonBehavior.__init__(self)
         Image.__init__(self)
-        line = line
+        self.row = line
         hidden = True
         column = column
         number = number
