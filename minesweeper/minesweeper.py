@@ -1,6 +1,6 @@
 import random
 from itertools import product
-
+import logging
 from kivy.app import App
 from kivy.uix.behaviors import ButtonBehavior
 from kivy.uix.gridlayout import GridLayout
@@ -25,7 +25,7 @@ class Cell(ButtonBehavior, Image):
         self.source = normal
 
     def on_press(self):
-        print "love"
+        logging.info('{}, {} pressed - number {}'.format(self.row, self.column, self.number))
         self.source = 'bomb.jpg'
 
 
