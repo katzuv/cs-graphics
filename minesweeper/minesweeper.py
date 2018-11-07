@@ -18,8 +18,8 @@ class Cell(ButtonBehavior, Image):
         Image.__init__(self)
         self.row = line
         hidden = True
-        column = column
-        number = number
+        self.column = column
+        self.number = number
         normal = 'dolphin.png'
         bomb = 'bomb.jpg'
         self.source = normal
