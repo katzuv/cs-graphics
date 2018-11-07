@@ -50,7 +50,7 @@ class Board(GridLayout):
         self.add_widget(l)
         self.add_widget(l1)
 
-    def random_bombs(self):  # we have written this but the students won't get this
+    def insert_bombs(self):  # we have written this but the students won't get this
         for row, column in product(range(self.cols), range(self.cols)):
             if random.randint(0, 6) == 1:  # statistics of bombs
                 cell = Cell(row, column, -1)
