@@ -26,7 +26,10 @@ class Cell(ButtonBehavior, Image):
 
     def on_press(self):
         logging.info('{}, {} pressed - number {}'.format(self.row, self.column, self.number))
-        self.source = 'bomb.jpg'
+        if self.number == self.BOMB_NUMBER:
+            self.source = 'bomb.jpg'
+        else:
+            self.source = 'numbers\{}.png'.format(self.number)
 
 
 class Board(GridLayout):
