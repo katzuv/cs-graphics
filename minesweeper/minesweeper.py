@@ -77,11 +77,14 @@ class Board(GridLayout):
         for row, column in product(range(self.cols), range(self.cols)):
             # for inner_row, inner_column in product(range(self.cols), range(self.cols)):
             current_cell = self.board[row][column]
-            if not current_cell.is_bomb():
-                for inner_row, inner_column in product(range(max(0, current_cell.row), min(self.cols, current_cell.row + 3)),
-                                                       range(max(0, current_cell.column), min(self.cols, current_cell.column + 3))):
-                    if self.board[inner_row][inner_column].is_bomb():
-                        current_cell.number += 1
+            if current_cell.is_bomb():
+                start_row = max(0, current_cell.row)
+                end_row = min(self.cols, current_cell.row + 3)
+                start_column = max(0, current_cell.column)
+                end_column = min(self.cols, current_cell.column + 3)
+                for inner_row, inner_column in product(range(start_row, end_row), range(start_column, end_column)):
+                    self.board[inner_row][inner_column].number += 1
+
     def end_game(self):
         for row, column in product(range(self.cols), range(self.cols)):
             self.board[row][column].expose_cell()
