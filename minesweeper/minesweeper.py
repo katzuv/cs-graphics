@@ -68,11 +68,11 @@ class Board(GridLayout):
     def insert_bombs(self):  # we have written this but the students won't get this
         for row, column in product(range(self.cols), range(self.cols)):
             if random.randint(0, 6) == 1:  # statistics of bombs
-                cell = Cell(row, column, -1)
+                cell = Cell(row, column, self, -1)
                 # self.bind(on_press=self.change_cell(cell))
                 self.bombs += 1
             else:
-                cell = Cell(row, column)
+                cell = Cell(row, column, self)
                 # self.bind(on_press=self.change_cell(cell))
             self.board[row][column] = cell
             self.add_widget(cell)
