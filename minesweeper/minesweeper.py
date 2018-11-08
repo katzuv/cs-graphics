@@ -59,10 +59,7 @@ class Board(GridLayout):
         self.insert_numbers()
         # for i in self.board:
         #   self.add_widget(i)#add the cells on the board (the View board)'''
-        l = Label(text='num bombs', font_size='20sp')
-        l1 = Label(text=str(self.bombs), font_size='20sp')
-        self.add_widget(l)
-        self.add_widget(l1)
+        self.add_widget(Label(text='number of bombs {}'.format(self.bombs), font_size='20sp'))
 
     def insert_bombs(self):  # we have written this but the students won't get this
         for row, column in product(range(self.cols), range(self.cols)):
