@@ -30,20 +30,19 @@ class Cell(ButtonBehavior, Image):
     def is_bomb(self):
         return self.number == self.BOMB_NUMBER
 
-    def expose_cell(self):
+    def expose(self):
         if self.is_bomb():
-            self.source = 'bomb.jpg'
-        else:
-            self.source = 'numbers\{}.png'.format(self.number)
-    def on_press(self):
-        if self.BOMB_PRESSED or self.pressed:
-            return
-        logging.info('{}, {} pressed - number {}'.format(self.row, self.column, self.number))
-        if self.number == self.BOMB_NUMBER:
             self.source = 'bomb.jpg'
             self.BOMB_PRESSED = True
         else:
             self.source = 'numbers\{}.png'.format(self.number)
+
+    def on_press(self):
+        if self.BOMB_PRESSED or self.pressed:
+            return
+        logging.info('{}, {} pressed - number {}'.format(self.row, self.column, self.number))
+        self.pressed = True
+        self.expose()
 
 
 class Board(GridLayout):
