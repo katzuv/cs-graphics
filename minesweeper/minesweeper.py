@@ -82,6 +82,11 @@ class Board(GridLayout):
                                                        range(max(0, current_cell.column), min(self.cols, current_cell.column + 3))):
                     if self.board[inner_row][inner_column].is_bomb():
                         current_cell.number += 1
+    def end_game(self):
+        for row, column in product(range(self.cols), range(self.cols)):
+            self.board[row][column].expose_cell()
+        self.add_widget(Label(text='{}GAME OVER :('.format(' ' * 50), font_size='50sp', x=200, y=200))
+        # self.remove_widget()
 
     def change_cell(self, cell):
         print "Hello, World!"
