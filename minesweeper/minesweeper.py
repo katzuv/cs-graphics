@@ -12,13 +12,14 @@ class Cell(ButtonBehavior, Image):
     BOMB_NUMBER = -1
     BOMB_PRESSED = False
 
-    def __init__(self, line, column, number=0):
+    def __init__(self, line, column, board, number=0):
         # num = -1  is a bomb in the cell , if not the number in the cell is the number of the bombs around the cell.
 
         ButtonBehavior.__init__(self)
         Image.__init__(self)
         self.row = line
         hidden = True
+        self.board = board
         self.column = column
         self.number = number
         normal = 'dolphin.png'
