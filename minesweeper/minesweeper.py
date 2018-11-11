@@ -74,18 +74,29 @@ class Board(GridLayout):
             self.add_widget(cell)
 
     def insert_numbers(self):
+        """Insert the numbers of the cells which are not bombs."""
         for row, column in product(range(self.cols), range(self.cols)):
             # for inner_row, inner_column in product(range(self.cols), range(self.cols)):
             current_cell = self.board[row][column]
             if current_cell.is_bomb():
-                start_row = max(0, current_cell.row)
-                end_row = min(self.cols, current_cell.row + 3)
-                start_column = max(0, current_cell.column)
-                end_column = min(self.cols, current_cell.column + 3)
-                for inner_row, inner_column in product(range(start_row, end_row), range(start_column, end_column)):
+                for inner_row, inner_column in self.surrounding_cells(current_cell):
                     self.board[inner_row][inner_column].number += 1
 
-    def end_game(self):
+    def surrounding_cells(self, cell):
+        """
+        :param cell: the cell to find its surroundings
+        :type cell: Cell
+        :return: a list of the indices of the surrounding cells of :cell:
+        :rtype: list
+        """
+        start_row = max(0, cell.row - 1)
+        end_row = min(self.cols, cell.row + 2)
+        start_column = max(0, cell.column - 1)
+        end_column = min(self.cols, cell.column + 2)
+        temp = list(product(range(start_row, end_row), range(start_column, end_column)))
+        temp.remove((cell.row, cell.column))
+        return temp
+
         for row, column in product(range(self.cols), range(self.cols)):
             self.board[row][column].expose_cell()
         self.add_widget(Label(text='{}GAME OVER :('.format(' ' * 50), font_size='50sp', x=200, y=200))
