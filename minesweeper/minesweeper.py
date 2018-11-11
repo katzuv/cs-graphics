@@ -114,7 +114,4 @@ class TestApp(App):
 
 
 if __name__ == '__main__':
-    try:
-        TestApp().run()
-    except SystemExit:
-        print 'Game over :('
+    TestApp().run()
