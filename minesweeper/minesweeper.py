@@ -97,11 +97,12 @@ class Board(GridLayout):
         temp.remove((cell.row, cell.column))
         return temp
 
+    def end_game_lost(self):
+        """Expose all the cell in the board and print that the game is over."""
         for row, column in product(range(self.cols), range(self.cols)):
-            self.board[row][column].expose_cell()
-        self.add_widget(Label(text='{}GAME OVER :('.format(' ' * 50), font_size='50sp', x=200, y=200))
-        # self.remove_widget()
-
+            self.board[row][column].expose()
+        self.add_widget(Label(text='{}GAME OVER :('.format(' ' * 50), font_size='50sp'))
+        self.remove_widget(self.number_of_bombs_label)
 
 
 class TestApp(App):
