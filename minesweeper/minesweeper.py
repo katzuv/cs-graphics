@@ -66,6 +66,7 @@ class Board(GridLayout):
         self.add_widget(self.number_of_bombs_label)
 
     def insert_bombs(self):  # we have written this but the students won't get this
+        """Insert bombs inside the board."""
         for row, column in product(range(self.cols), range(self.cols)):
             if random.randint(0, 6) == 1:  # statistics of bombs
                 cell = Cell(row, column, self, -1)
