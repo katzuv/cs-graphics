@@ -102,13 +102,6 @@ class Board(GridLayout):
         self.add_widget(Label(text='{}GAME OVER :('.format(' ' * 50), font_size='50sp', x=200, y=200))
         # self.remove_widget()
 
-    def change_cell(self, cell):
-        print "Hello, World!"
-        # cell.num = 1000
-
-    def changeNumInCell(self):
-        """Needs to check what is the number that suppose to be in the cell"""
-        pass
 
 
 class TestApp(App):
