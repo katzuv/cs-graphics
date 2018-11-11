@@ -33,7 +33,7 @@ class Cell(ButtonBehavior, Image):
     def expose(self):
         if self.is_bomb():
             self.source = 'bomb.jpg'
-            self.BOMB_PRESSED = True
+            self.__class__.BOMB_PRESSED = True
         else:
             self.source = 'numbers\{}.png'.format(self.number)
 
@@ -41,6 +41,8 @@ class Cell(ButtonBehavior, Image):
         if self.BOMB_PRESSED or self.pressed:
             return
         logging.info('{}, {} pressed - number {}'.format(self.row, self.column, self.number))
+        if self.is_bomb():
+            self.__class__.BOMB_PRESSED = True
         self.pressed = True
         self.expose()
 
