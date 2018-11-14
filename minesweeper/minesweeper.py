@@ -106,11 +106,15 @@ class Board(GridLayout):
         temp.remove((cell.row, cell.column))
         return temp
 
-    def end_game_lost(self):
-        """Expose all the cell in the board and print that the game is over."""
+    def end_game(self, message):
+        """
+        Expose all the cells in the board and print the message.
+        :param message: message to print on the board
+        :type message: str
+        """
         for row, column in product(range(self.cols), range(self.cols)):
             self.board[row][column].expose()
-        self.add_widget(Label(text='{}GAME OVER :('.format(' ' * 50), font_size='50sp'))
+        self.add_widget(Label(text='{}{}'.format(' ' * 50, message), font_size='50sp'))
         self.remove_widget(self.number_of_bombs_label)
 
 
