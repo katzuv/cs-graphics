@@ -40,8 +40,13 @@ class Cell(ButtonBehavior, Image):
             self.pressed = True
             self.board.exposed += 1
             for row, column in self.board.surrounding_cells(self):
-                if self.board.board[row][column].number == 0:
-                    self.board.board[row][column].expose()
+                cell = self.board.board[row][column]
+                if cell.number == 0:
+                    cell.expose()
+                elif not cell.is_bomb():
+                    cell.source = 'numbers\{}.png'.format(self.number)
+                    cell.pressed = True
+                    self.board.exposed += 1
 
     def on_press(self):
         if self.BOMB_PRESSED or self.pressed:
