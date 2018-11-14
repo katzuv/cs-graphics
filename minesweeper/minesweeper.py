@@ -30,6 +30,8 @@ class Cell(ButtonBehavior, Image):
         return self.number == self.BOMB_NUMBER
 
     def expose(self):
+        if self.pressed:
+            return
         if self.is_bomb():
             self.source = 'bomb.jpg'
             self.__class__.BOMB_PRESSED = True
