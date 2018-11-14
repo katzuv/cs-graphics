@@ -7,3 +7,4 @@ def test_surrounding_cells():
                                                                (3, 4)}
     assert set(board.surrounding_cells(Cell(0, 0, board))) == {(0, 1), (1, 0), (1, 1)}
     assert set(board.surrounding_cells(Cell(1, 0, board))) == {(0, 0), (0, 1), (1, 1), (2, 1), (2, 0)}
+    assert set(board.surrounding_cells(Cell(9, 4, board))) == {(9, 3), (8, 3), (8, 4), (8, 5), (9, 5)}
