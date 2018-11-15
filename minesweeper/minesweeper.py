@@ -94,7 +94,6 @@ class Board(GridLayout):
     def insert_numbers(self):
         """Insert the numbers of the cells which are not bombs."""
         for row, column in product(range(self.cols), range(self.cols)):
-            # for inner_row, inner_column in product(range(self.cols), range(self.cols)):
             current_cell = self.board[row][column]
             if current_cell.is_bomb():
                 for inner_row, inner_column in self.surrounding_cells(current_cell):
