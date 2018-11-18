@@ -39,9 +39,9 @@ class Cell(ButtonBehavior, Image):
             self.__class__.GAME_OVER = True
             return
 
-            self.source = 'numbers\{}.png'.format(self.number)
+        self.source = 'numbers\{}.png'.format(self.number)
         self._pressed = True
-            self.board.exposed += 1
+        self.board.exposed += 1
 
         if self.number == 0:
             for row, column in self.board.surrounding_cells(self):
@@ -95,10 +95,12 @@ class Board(GridLayout):
     def insert_numbers(self):
         """Insert the numbers of the cells which are not bombs."""
         for row, column in product(range(self.cols), range(self.cols)):
-            current_cell = self.board[row][column]
-            if current_cell.is_bomb():
-                for inner_row, inner_column in self.surrounding_cells(current_cell):
-                    self.board[inner_row][inner_column].number += 1
+            cell = self.board[row][column]
+            if cell.is_bomb():
+                for inner_row, inner_column in self.surrounding_cells(cell):
+                    current_cell = self.board[inner_row][inner_column]
+                    if not current_cell.is_bomb():
+                        current_cell.number += 1
 
     def surrounding_cells(self, cell):
         """
