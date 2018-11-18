@@ -35,7 +35,8 @@ class Cell(ButtonBehavior, Image):
             self.source = 'bomb.jpg'
             self._pressed = True
             self.__class__.BOMB_PRESSED = True
-        else:
+            return
+
             self.source = 'numbers\{}.png'.format(self.number)
         self._pressed = True
             self.board.exposed += 1
