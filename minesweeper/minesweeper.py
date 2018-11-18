@@ -40,6 +40,8 @@ class Cell(ButtonBehavior, Image):
             self.source = 'numbers\{}.png'.format(self.number)
         self._pressed = True
             self.board.exposed += 1
+
+        if self.number == 0:
             for row, column in self.board.surrounding_cells(self):
                 cell = self.board.board[row][column]
                 if cell.number == 0:
