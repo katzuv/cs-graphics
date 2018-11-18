@@ -47,7 +47,7 @@ class Cell(ButtonBehavior, Image):
                 if cell.number == 0:
                     cell.expose()
                 elif not cell.is_bomb():
-                    cell.source = 'numbers\{}.png'.format(self.number)
+                    cell.source = 'numbers\{}.png'.format(cell.number)
                     cell.pressed = True
                     self.board.exposed += 1
 
