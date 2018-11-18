@@ -72,8 +72,6 @@ class Board(GridLayout):
 
         self.insert_bombs()  # choose the bombs in the game
         self.insert_numbers()
-        # for i in self.board:
-        #   self.add_widget(i)#add the cells on the board (the View board)'''
         self.number_of_bombs_label = Label(text='number of bombs {}'.format(self.bombs), font_size='20sp')
         self.add_widget(self.number_of_bombs_label)
 
