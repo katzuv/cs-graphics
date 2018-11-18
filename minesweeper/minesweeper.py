@@ -11,7 +11,7 @@ from kivy.uix.label import Label
 
 class Cell(ButtonBehavior, Image):
     BOMB_NUMBER = -1
-    BOMB_PRESSED = False
+    GAME_OVER = False
 
     def __init__(self, line, column, board, number=0):
         # num = -1  is a bomb in the cell , if not the number in the cell is the number of the bombs around the cell.
@@ -32,9 +32,9 @@ class Cell(ButtonBehavior, Image):
         if self._pressed:
             return
         if self.is_bomb():
-            self.source = 'bomb.jpg'
+            self.source = '-1.png'
             self._pressed = True
-            self.__class__.BOMB_PRESSED = True
+            self.__class__.GAME_OVER = True
             return
 
             self.source = 'numbers\{}.png'.format(self.number)
@@ -52,12 +52,12 @@ class Cell(ButtonBehavior, Image):
                     self.board.exposed += 1
 
     def on_press(self):
-        if self.BOMB_PRESSED or self._pressed:
+        if self.GAME_OVER or self._pressed:
             return
         logging.info('{}, {} pressed - number {}'.format(self.row, self.column, self.number))
         if self.is_bomb():
             self.board.end_game('GAME OVER :(')
-            self.__class__.BOMB_PRESSED = True
+            self.__class__.GAME_OVER = True
         else:
             self.expose()
             if self.board.exposed == self.board.cols ** 2 - self.board.bombs:
