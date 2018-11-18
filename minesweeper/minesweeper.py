@@ -28,14 +28,15 @@ class Cell(ButtonBehavior, Image):
         return self.number == self.BOMB_NUMBER
 
     def expose(self):
-        if self.pressed:
+        if self._pressed:
             return
         if self.is_bomb():
             self.source = 'bomb.jpg'
+            self._pressed = True
             self.__class__.BOMB_PRESSED = True
         else:
             self.source = 'numbers\{}.png'.format(self.number)
-            self.pressed = True
+        self._pressed = True
             self.board.exposed += 1
             for row, column in self.board.surrounding_cells(self):
                 cell = self.board.board[row][column]
@@ -47,7 +48,7 @@ class Cell(ButtonBehavior, Image):
                     self.board.exposed += 1
 
     def on_press(self):
-        if self.BOMB_PRESSED or self.pressed:
+        if self.BOMB_PRESSED or self._pressed:
             return
         logging.info('{}, {} pressed - number {}'.format(self.row, self.column, self.number))
         if self.is_bomb():
