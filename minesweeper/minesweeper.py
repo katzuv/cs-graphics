@@ -121,10 +121,16 @@ class Board(GridLayout):
         :param message: message to print on the board
         :type message: str
         """
-        for row, column in product(range(self.cols), range(self.cols)):
-            self.board[row][column].expose()
+        self._expose_all_cells()
         self.add_widget(Label(text='{}{}'.format(' ' * 50, message), font_size='50sp'))
         self.remove_widget(self.number_of_bombs_label)
+
+    def _expose_all_cells(self):
+        """Expose all the cells in the board."""
+        Cell.GAME_OVER = True
+        for row, column in product(range(self.cols), range(self.cols)):
+            current_cell = self.board[row][column]
+            current_cell.source = 'numbers\{}.png'.format(current_cell.number)
 
 
 class TestApp(App):
