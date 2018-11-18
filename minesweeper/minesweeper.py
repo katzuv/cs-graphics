@@ -21,10 +21,8 @@ class Cell(ButtonBehavior, Image):
         self.board = board
         self.column = column
         self.number = number
-        normal = 'dolphin.png'
-        bomb = 'bomb.jpg'
-        self.source = normal
-        self.pressed = False
+        self.source = 'dolphin.png'
+        self._pressed = False
 
     def is_bomb(self):
         return self.number == self.BOMB_NUMBER
