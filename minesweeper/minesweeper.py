@@ -29,6 +29,8 @@ class Cell(ButtonBehavior, Image):
         return self.number == self.BOMB_NUMBER
 
     def expose(self):
+        if self.board.exposed == self.board.cols ** 2 - self.board.bombs:
+            self.board.end_game('YOU WON! :)')
         if self._pressed:
             return
         if self.is_bomb():
@@ -60,8 +62,6 @@ class Cell(ButtonBehavior, Image):
             self.__class__.GAME_OVER = True
         else:
             self.expose()
-            if self.board.exposed == self.board.cols ** 2 - self.board.bombs:
-                self.board.end_game('YOU WON! :)')
 
 
 class Board(GridLayout):
