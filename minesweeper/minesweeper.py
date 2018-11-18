@@ -1,6 +1,7 @@
+import logging
 import random
 from itertools import product
-import logging
+
 from kivy.app import App
 from kivy.uix.behaviors import ButtonBehavior
 from kivy.uix.gridlayout import GridLayout
