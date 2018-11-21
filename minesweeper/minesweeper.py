@@ -39,6 +39,7 @@ class Cell(ButtonBehavior, Image):
             self.source = '-1.png'
             self._pressed = True
             self.__class__.GAME_OVER = True
+            self.board.exposed += 1
             return
 
         self.source = 'numbers\{}.png'.format(self.number)
