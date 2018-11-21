@@ -76,7 +76,7 @@ class Board(GridLayout):
         self.bombs = 0  # count how many bombs R in the Board .
         self.counters = 0  # counting the num of bombs to tell later to the player
         self.cols = number_of_lines  # number of columns in the gridLayout
-        self.board = [[None] * self.cols for _ in range(self.cols)]  # all the cells in the board
+        self.board = [[None] * self.cols for _ in xrange(self.cols)]  # all the cells in the board
         self.exposed = 0
 
         self.insert_bombs()  # choose the bombs in the game
@@ -89,7 +89,7 @@ class Board(GridLayout):
 
     def insert_bombs(self):  # we have written this but the students won't get this
         """Insert bombs inside the board."""
-        for row, column in product(range(self.cols), range(self.cols)):
+        for row, column in product(xrange(self.cols), xrange(self.cols)):
             if random.randint(0, 6) == 1:  # statistics of bombs
                 cell = Cell(row, column, self, -1)
                 # self.bind(on_press=self.change_cell(cell))
@@ -102,7 +102,7 @@ class Board(GridLayout):
 
     def insert_numbers(self):
         """Insert the numbers of the cells which are not bombs."""
-        for row, column in product(range(self.cols), range(self.cols)):
+        for row, column in product(xrange(self.cols), xrange(self.cols)):
             cell = self.board[row][column]
             if cell.is_bomb():
                 for inner_row, inner_column in self.surrounding_cells(cell):
@@ -121,7 +121,7 @@ class Board(GridLayout):
         end_row = min(self.cols, cell.row + 2)
         start_column = max(0, cell.column - 1)
         end_column = min(self.cols, cell.column + 2)
-        temp = list(product(range(start_row, end_row), range(start_column, end_column)))
+        temp = list(product(xrange(start_row, end_row), xrange(start_column, end_column)))
         temp.remove((cell.row, cell.column))
         return temp
 
@@ -143,7 +143,7 @@ class Board(GridLayout):
     def _expose_all_cells(self):
         """Expose all the cells in the board."""
         Cell.GAME_OVER = True
-        for row, column in product(range(self.cols), range(self.cols)):
+        for row, column in product(xrange(self.cols), xrange(self.cols)):
             current_cell = self.board[row][column]
             current_cell.source = 'numbers\{}.png'.format(current_cell.number)
 
@@ -151,7 +151,7 @@ class Board(GridLayout):
 class TestApp(App):
     def build(self):
         self.title = 'Minesweeper'
-        return Board()
+        return Board(6)
 
 
 if __name__ == '__main__':
