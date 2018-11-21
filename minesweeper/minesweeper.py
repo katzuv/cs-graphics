@@ -148,6 +148,7 @@ class Board(GridLayout):
         :param message: message to print on the board
         :type message: str
         """
+        Cell.GAME_OVER = True
         self._expose_all_cells()
         self.add_widget(Label(text='{}{}'.format(' ' * 50, message), font_size='50sp'))
         # self.remove_widget(self.info_label)
