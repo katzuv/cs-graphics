@@ -29,6 +29,8 @@ class Cell(ButtonBehavior, Image):
         return self.number == self.BOMB_NUMBER
 
     def expose(self):
+        if self.GAME_OVER:
+            return
         if self.board.exposed == self.board.cols ** 2 - self.board.bombs:
             self.board.end_game('YOU WON! :)')
         if self._pressed:
