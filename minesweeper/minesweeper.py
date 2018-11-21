@@ -50,17 +50,18 @@ class Cell(ButtonBehavior, Image):
             return
         if self.board.exposed == self.board.cols ** 2 - self.board.bombs:
             self.board.end_game('YOU WON! :)')
-        elif self.is_bomb():
-            self.source = '-1.png'
             self._pressed = True
             self.__class__.GAME_OVER = True
             self.board.exposed += 1
             return
 
-        self.source = 'numbers\{}.png'.format(self.number)
+        if self.is_bomb():
+            self.source = 'numbers/-1.png'
         self._pressed = True
+            self.__class__.GAME_OVER = True
         self.board.exposed += 1
-        self.board.update_info_label()
+            self.board.end_game('GAME OVER :(')
+            return
 
         if self.number == 0:  # expose neighbors
             for row, column in self.board.surrounding_cells(self):
