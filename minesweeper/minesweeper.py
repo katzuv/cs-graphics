@@ -50,16 +50,15 @@ class Cell(ButtonBehavior, Image):
             return
 
         self.source = 'numbers\{}.png'.format(self.number)
-            self._pressed = True
-            self.__class__.GAME_OVER = True
-            self.board.exposed += 1
+        self._pressed = True
+        self.board.exposed += 1
         self.board.update_info_label()
 
         if self.is_bomb():
             self.source = 'numbers/-1.png'
-        self._pressed = True
+            self._pressed = True
             self.__class__.GAME_OVER = True
-        self.board.exposed += 1
+            self.board.exposed += 1
             self.board.end_game('GAME OVER :(')
             return
 
@@ -77,7 +76,7 @@ class Cell(ButtonBehavior, Image):
         if self.GAME_OVER or self._pressed:
             return
         logging.info('{}, {} pressed - number {}'.format(self.row, self.column, self.number))
-            self.expose()
+        self.expose()
         if self.board.exposed == self.board.cols ** 2 - self.board.bombs:
             self.board.end_game('YOU WON! :)')
 
