@@ -78,6 +78,8 @@ class Cell(ButtonBehavior, Image):
             return
         logging.info('{}, {} pressed - number {}'.format(self.row, self.column, self.number))
             self.expose()
+        if self.board.exposed == self.board.cols ** 2 - self.board.bombs:
+            self.board.end_game('YOU WON! :)')
 
 
 class Board(GridLayout):
