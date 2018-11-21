@@ -78,10 +78,6 @@ class Cell(ButtonBehavior, Image):
         if self.GAME_OVER or self._pressed:
             return
         logging.info('{}, {} pressed - number {}'.format(self.row, self.column, self.number))
-        if self.is_bomb():
-            self.board.end_game('GAME OVER :(')
-            self.__class__.GAME_OVER = True
-        else:
             self.expose()
 
 
