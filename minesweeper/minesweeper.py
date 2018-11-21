@@ -48,8 +48,8 @@ class Cell(ButtonBehavior, Image):
         """Expose the cell, and its neighbors if needed."""
         if self.GAME_OVER or self._pressed:
             return
-        if self.board.exposed == self.board.cols ** 2 - self.board.bombs:
-            self.board.end_game('YOU WON! :)')
+
+        self.source = 'numbers\{}.png'.format(self.number)
             self._pressed = True
             self.__class__.GAME_OVER = True
             self.board.exposed += 1
