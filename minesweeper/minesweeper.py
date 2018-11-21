@@ -46,11 +46,10 @@ class Cell(ButtonBehavior, Image):
 
     def expose(self):
         """Expose the cell, and its neighbors if needed."""
+        if self.GAME_OVER or self._pressed:
             return
         if self.board.exposed == self.board.cols ** 2 - self.board.bombs:
             self.board.end_game('YOU WON! :)')
-        if self._pressed:
-            return
         elif self.is_bomb():
             self.source = '-1.png'
             self._pressed = True
