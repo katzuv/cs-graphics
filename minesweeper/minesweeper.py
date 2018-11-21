@@ -53,7 +53,7 @@ class Cell(ButtonBehavior, Image):
             self._pressed = True
             self.__class__.GAME_OVER = True
             self.board.exposed += 1
-            return
+        self.board.update_info_label()
 
         if self.is_bomb():
             self.source = 'numbers/-1.png'
@@ -72,7 +72,6 @@ class Cell(ButtonBehavior, Image):
                     cell.source = 'numbers\{}.png'.format(cell.number)
                     cell.pressed = True
                     self.board.exposed += 1
-        self.board.update_info_label()
 
     def on_press(self):
         if self.GAME_OVER or self._pressed:
