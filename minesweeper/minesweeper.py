@@ -35,7 +35,7 @@ class Cell(ButtonBehavior, Image):
             self.board.end_game('YOU WON! :)')
         if self._pressed:
             return
-        if self.is_bomb():
+        elif self.is_bomb():
             self.source = '-1.png'
             self._pressed = True
             self.__class__.GAME_OVER = True
