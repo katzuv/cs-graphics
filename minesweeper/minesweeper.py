@@ -10,10 +10,22 @@ from kivy.uix.label import Label
 
 
 class Cell(ButtonBehavior, Image):
+    """Class representing a Minesweeper cell."""
     BOMB_NUMBER = -1
     GAME_OVER = False
 
     def __init__(self, line, column, board, number=0):
+        """
+        Instantiate a Minesweeper cell.
+        :param line: line of the cell
+        :type line: int
+        :param column: column of the cell
+        :type column: int
+        :param board: the board
+        :type board: Board
+        :param number: number inside the cell
+        :type number: int
+        """
         # num = -1  is a bomb in the cell , if not the number in the cell is the number of the bombs around the cell.
 
         ButtonBehavior.__init__(self)
@@ -26,10 +38,14 @@ class Cell(ButtonBehavior, Image):
         self._pressed = False
 
     def is_bomb(self):
+        """
+        :return: whether the cell is a bomb
+        :rtype: bool
+        """
         return self.number == self.BOMB_NUMBER
 
     def expose(self):
-        if self.GAME_OVER:
+        """Expose the cell, and its neighbors if needed."""
             return
         if self.board.exposed == self.board.cols ** 2 - self.board.bombs:
             self.board.end_game('YOU WON! :)')
@@ -70,6 +86,7 @@ class Cell(ButtonBehavior, Image):
 
 
 class Board(GridLayout):
+    """Class representing a Minesweeper board."""
     def __init__(self, number_of_lines=10):
         # constructor of the board
         super(Board, self).__init__()
