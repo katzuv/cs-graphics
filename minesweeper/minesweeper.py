@@ -63,7 +63,7 @@ class Cell(ButtonBehavior, Image):
         self.board.exposed += 1
         self.board.update_info_label()
 
-        if self.number == 0:
+        if self.number == 0:  # expose neighbors
             for row, column in self.board.surrounding_cells(self):
                 cell = self.board.board[row][column]
                 if cell.number == 0:
