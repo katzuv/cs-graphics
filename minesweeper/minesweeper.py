@@ -84,6 +84,7 @@ class Cell(ButtonBehavior, Image):
 
 class Board(GridLayout):
     """Class representing a Minesweeper board."""
+
     def __init__(self, number_of_lines=10):
         # constructor of the board
         super(Board, self).__init__()
