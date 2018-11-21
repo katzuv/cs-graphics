@@ -42,6 +42,7 @@ class Cell(ButtonBehavior, Image):
         self.source = 'numbers\{}.png'.format(self.number)
         self._pressed = True
         self.board.exposed += 1
+        self.board.update_info_label()
 
         if self.number == 0:
             for row, column in self.board.surrounding_cells(self):
@@ -52,6 +53,7 @@ class Cell(ButtonBehavior, Image):
                     cell.source = 'numbers\{}.png'.format(cell.number)
                     cell.pressed = True
                     self.board.exposed += 1
+        self.board.update_info_label()
 
     def on_press(self):
         if self.GAME_OVER or self._pressed:
@@ -76,8 +78,11 @@ class Board(GridLayout):
 
         self.insert_bombs()  # choose the bombs in the game
         self.insert_numbers()
-        self.number_of_bombs_label = Label(text='Number of bombs: {}'.format(self.bombs), font_size='20sp')
-        self.add_widget(self.number_of_bombs_label)
+        self.info_label = Label(
+            text='{} bombs {} exposed {} unexposed'.format(30 * ' ' + str(self.bombs), self.exposed,
+                                                           self.cols ** 2 - self.exposed),
+            font_size='20sp')
+        self.add_widget(self.info_label)
 
     def insert_bombs(self):  # we have written this but the students won't get this
         """Insert bombs inside the board."""
@@ -125,7 +130,12 @@ class Board(GridLayout):
         """
         self._expose_all_cells()
         self.add_widget(Label(text='{}{}'.format(' ' * 50, message), font_size='50sp'))
-        self.remove_widget(self.number_of_bombs_label)
+        # self.remove_widget(self.info_label)
+
+    def update_info_label(self):
+        """Update the information label, which contains amounts of bombs, exposed and unexposed cells."""
+        self.info_label.text = '{} bombs {} exposed {} unexposed'.format(30 * ' ' + str(self.bombs), self.exposed,
+                                                                         self.cols ** 2 - self.exposed)
 
     def _expose_all_cells(self):
         """Expose all the cells in the board."""
