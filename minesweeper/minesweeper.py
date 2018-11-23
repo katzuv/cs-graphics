@@ -12,7 +12,6 @@ from kivy.uix.label import Label
 class Cell(ButtonBehavior, Image):
     """Class representing a Minesweeper cell."""
     BOMB_NUMBER = -1
-    GAME_OVER = False
 
     def __init__(self, line, column, board, number=0):
         """
@@ -27,15 +26,13 @@ class Cell(ButtonBehavior, Image):
         :type number: int
         """
         # num = -1  is a bomb in the cell , if not the number in the cell is the number of the bombs around the cell.
-
-        ButtonBehavior.__init__(self)
-        Image.__init__(self)
+        super(Cell, self).__init__()
         self.row = line
         self.board = board
         self.column = column
         self.number = number
         self.source = 'dolphin.png'
-        self._pressed = False
+        self._exposed = False
 
     def is_bomb(self):
         """
@@ -46,39 +43,31 @@ class Cell(ButtonBehavior, Image):
 
     def expose(self):
         """Expose the cell, and its neighbors if needed."""
-        if self.GAME_OVER or self._pressed:
+        if self._exposed:
             return
-
+        self._exposed = True
+        self.board.increase_exposed()
         self.source = 'numbers\{}.png'.format(self.number)
-        self._pressed = True
-        self.board.exposed += 1
+
         self.board.update_info_label()
 
-        if self.is_bomb():
-            self.source = 'numbers/-1.png'
-            self._pressed = True
-            self.__class__.GAME_OVER = True
-            self.board.exposed += 1
-            self.board.end_game('GAME OVER :(')
-            return
-
         if self.number == 0:  # expose neighbors
-            for row, column in self.board.surrounding_cells(self):
-                cell = self.board.board[row][column]
-                if cell.number == 0:
+            for cell in self.board.surrounding_cells(self):
+                if not cell.is_bomb():
                     cell.expose()
-                elif not cell.is_bomb():
-                    cell.source = 'numbers\{}.png'.format(cell.number)
-                    cell.pressed = True
-                    self.board.exposed += 1
 
     def on_press(self):
-        if self.GAME_OVER or self._pressed:
+        if self.board.game_over or self._exposed:
             return
         logging.info('{}, {} pressed - number {}'.format(self.row, self.column, self.number))
+
+        if self.is_bomb():
+            self.board.bomb_pressed()
+            return
+
         self.expose()
-        if self.board.exposed == self.board.cols ** 2 - self.board.bombs:
-            self.board.end_game('YOU WON! :)')
+
+        self.board.check_win()
 
 
 class Board(GridLayout):
@@ -88,16 +77,16 @@ class Board(GridLayout):
         # constructor of the board
         super(Board, self).__init__()
         self.bombs = 0  # count how many bombs R in the Board .
-        self.counters = 0  # counting the num of bombs to tell later to the player
         self.cols = number_of_lines  # number of columns in the gridLayout
         self.board = [[None] * self.cols for _ in xrange(self.cols)]  # all the cells in the board
-        self.exposed = 0
+        self._exposed = 0
+        self.game_over = False
 
         self.insert_bombs()  # choose the bombs in the game
-        self.insert_numbers()
+        self._insert_numbers()
         self.info_label = Label(
-            text='{} bombs {} exposed {} unexposed'.format(30 * ' ' + str(self.bombs), self.exposed,
-                                                           self.cols ** 2 - self.exposed),
+            text='{} bombs {} exposed {} unexposed'.format(30 * ' ' + str(self.bombs), self._exposed,
+                                                           self.cols ** 2 - self._exposed),
             font_size='20sp')
         self.add_widget(self.info_label)
 
@@ -106,21 +95,18 @@ class Board(GridLayout):
         for row, column in product(xrange(self.cols), xrange(self.cols)):
             if random.randint(0, 6) == 1:  # statistics of bombs
                 cell = Cell(row, column, self, -1)
-                # self.bind(on_press=self.change_cell(cell))
                 self.bombs += 1
             else:
                 cell = Cell(row, column, self)
-                # self.bind(on_press=self.change_cell(cell))
             self.board[row][column] = cell
             self.add_widget(cell)
 
-    def insert_numbers(self):
+    def _insert_numbers(self):
         """Insert the numbers of the cells which are not bombs."""
         for row, column in product(xrange(self.cols), xrange(self.cols)):
             cell = self.board[row][column]
             if cell.is_bomb():
-                for inner_row, inner_column in self.surrounding_cells(cell):
-                    current_cell = self.board[inner_row][inner_column]
+                for current_cell in self.surrounding_cells(cell):
                     if not current_cell.is_bomb():
                         current_cell.number += 1
 
@@ -135,32 +121,37 @@ class Board(GridLayout):
         end_row = min(self.cols, cell.row + 2)
         start_column = max(0, cell.column - 1)
         end_column = min(self.cols, cell.column + 2)
-        temp = list(product(xrange(start_row, end_row), xrange(start_column, end_column)))
-        temp.remove((cell.row, cell.column))
-        return temp
-
-    def end_game(self, message):
-        """
-        Expose all the cells in the board and print the message.
-        :param message: message to print on the board
-        :type message: str
-        """
-        Cell.GAME_OVER = True
-        self._expose_all_cells()
-        self.add_widget(Label(text='{}{}'.format(' ' * 50, message), font_size='50sp'))
-        # self.remove_widget(self.info_label)
+        return [self.board[row][column]
+                for row, column in product(xrange(start_row, end_row), xrange(start_column, end_column))
+                if (row, column) != (cell.row, cell.column)]
 
     def update_info_label(self):
         """Update the information label, which contains amounts of bombs, exposed and unexposed cells."""
-        self.info_label.text = '{} bombs {} exposed {} unexposed'.format(30 * ' ' + str(self.bombs), self.exposed,
-                                                                         self.cols ** 2 - self.exposed)
+        self.info_label.text = '{} bombs {} exposed {} unexposed'.format(30 * ' ' + str(self.bombs), self._exposed,
+                                                                         self.cols ** 2 - self._exposed)
+
+    def increase_exposed(self):
+        """Increase the number of exposed cells."""
+        self._exposed += 1
+
+    def bomb_pressed(self):
+        self._end_game('GAME OVER :(')
+
+    def check_win(self):
+        """Print the game has ended if a win occurred."""
+        if self.bombs == self.cols ** 2 - self._exposed:
+            self._end_game('YOU WON :)')
+
+    def _end_game(self, message):
+        """Expose all the cells in the board and print the message."""
+        self.game_over = True
+        self._expose_all_cells()
+        self.info_label.text = message
 
     def _expose_all_cells(self):
         """Expose all the cells in the board."""
-        Cell.GAME_OVER = True
         for row, column in product(xrange(self.cols), xrange(self.cols)):
-            current_cell = self.board[row][column]
-            current_cell.source = 'numbers\{}.png'.format(current_cell.number)
+            self.board[row][column].expose()
 
 
 class TestApp(App):
