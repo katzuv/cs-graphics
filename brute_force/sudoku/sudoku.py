@@ -1,102 +1,100 @@
+import logging
 from itertools import product
 
 from kivy.app import App
 from kivy.uix.behaviors import ButtonBehavior
 from kivy.uix.gridlayout import GridLayout
 from kivy.uix.image import Image
+from kivy.uix.label import Label
 
 
 class Cell(ButtonBehavior, Image):
-    def __init__(self, line, column, num):
+    def __init__(self, line, column, number, board):
         super(Cell, self).__init__()
         self.line = line
         self.column = column
-        self.options = set(xrange(1, 7))
-        self.number = num
+
+        self.number = number
+        self.options = range(1, 7)
+        self.board = board
+
+        self.update(number)
+
+    def on_press(self):
+        logging.info('Pressed')
+        self.board.solve()
+
+    def update(self, number):
+        """
+        Update the cell's number and image.
+        :param number: number to change to
+        :type number: int
+        """
+        logging.info('({}, {}) updated to {}'.format(self.line, self.column, number))
+        self.number = number
+        self.source = 'numbers/{}.png'.format(self.number)
 
 
 class Board(GridLayout):
-    def __init__(self, columns=9):
+    def __init__(self, columns=6):
         """Instantiate a Sudoku board with 6 * 6 cells."""
         # 0 represent unknown
         super(Board, self).__init__()
-        self.problem = [[0, 3, 0, 0, 0, 0], [0, 0, 5, 0, 2, 1], [0, 0, 1, 0, 6, 0], [0, 6, 0, 5, 0, 0],
-                        [5, 1, 0, 6, 0, 0], [0, 0, 0, 0, 3, 0]]
+        self.label = Label(text='{}Click anywhere to solve'.format(' ' * 93), font_size=30)
+        self.initial_board = [[0, 3, 0, 0, 0, 0], [0, 0, 5, 0, 2, 1], [0, 0, 1, 0, 6, 0], [0, 6, 0, 5, 0, 0],
+                              [5, 1, 0, 6, 0, 0], [0, 0, 0, 0, 3, 0]]
         self.cols = columns
-        self.rows = [[Cell(row, column, self.problem[row - 1][column - 1])] for row, column in
-                     product(xrange(1, self.cols + 1), xrange(1, self.cols + 1))]
-        for row, column in product(xrange(self.cols), xrange(self.cols)):
-            self.add_widget(self.rows[row][column])
+        self.board = [[Cell(row, column, self.initial_board[row][column], self) for column in xrange(self.cols)] for row
+                      in xrange(self.cols)]
 
-    def find_first_empty(self):
+        for row, column in product(xrange(self.cols), xrange(self.cols)):
+            self.add_widget(self.board[row][column])
+        self.add_widget(self.label)
+
+    def _find_first_empty(self):
         """Return the first cell which is empty, or None if all cells are filled."""
         for row, column in product(xrange(self.cols), xrange(self.cols)):
-            cell = self.rows[row][column]
+            cell = self.board[row][column]
             if cell.number == 0:
                 return cell
 
-    def possible_placing(self, cell):
-        """Check whether the last option the algorithm placed match Sudoku in the line in the column and in the
-        square. """
-        op_in_same_line = list()
-        op_in_same_column = list()
-        op_in_same_square = list()
+    def _is_cell_location_valid(self, cell):
+        """
+        Check whether the location of :cell: is valid.
+
+        The checking is done by checking the cell's number is not repeated in its row, column and box.
+        """
         for row, column in product(xrange(self.cols), xrange(self.cols)):
-            current_cell = self.rows[row][column]
-            if current_cell.line == cell.line and row.number != 0:
-                op_in_same_line = op_in_same_line + [current_cell.number]
-            if current_cell.column == cell.column and row.number != 0:
-                op_in_same_column = op_in_same_column + [current_cell.number]
-            if ((current_cell.line - 1) / 2 == (cell.line - 1) / 2) and (
-                    (current_cell.column - 1) / 3 == (current_cell.column - 1) / 3) and current_cell.number != 0:
-                op_in_same_square = op_in_same_square + [current_cell.number]
-        if op_in_same_square.count(cell.number) != 1:
-            return False
-        if op_in_same_line.count(cell.number) != 1:
-            return False
-        if op_in_same_column.count(cell.number) != 1:
-            return False
+            if (row, column) == (cell.line, cell.column):
+                continue
+            current_cell = self.board[row][column]
+            if current_cell.number == cell.number:
+                if any((current_cell.line == cell.line,  # check if there are two identical numbers in a row
+                        current_cell.column == cell.column,  # column
+                        current_cell.line / 2 == cell.line / 2 and current_cell.column / 3 == cell.column / 3)):  # box
+                    return False
         return True
 
-    def brute_force(self):
-        cell = self.find_first_empty()
-        if cell:
+    def solve(self):
+        """Solve the game."""
+        cell = self._find_first_empty()
+        if cell is None:
             return True
+        self.label.text = '{}Smarter than you!'.format(' ' * 93)
         for option in cell.options:
-            cell.number = option
-            if self.possible_placing(cell):
-                if self.brute_force():
+            cell.update(option)
+            if self._is_cell_location_valid(cell):
+                if self.solve():
                     return True
-            cell.number = 0
+            cell.update(0)
         return False
 
-    def print_sudoku(self):
-        """Print every cell in new line number if known and list of possibilities if unknown."""
-        for i in xrange(1, 7):
-            for cell in self.rows:
-                if cell.line == i:
-                    print (cell.line, cell.column),
-                    if cell.number != 0:
-                        print cell.number
-                    else:
-                        print list(cell.options), " "
 
-    def print_solution(self):
-        for i, x in enumerate(self.rows):
-            print x.number,
-            if (i + 1) % 6 == 0:
-                print
-
-
-class TestApp(App):
+class Sudoku(App):
     def build(self):
         self.title = 'Sudoku'
         return Board(6)
 
 
 if __name__ == '__main__':
-    TestApp().run()
-    # a = Board()
-    # a.print_sudoku()
-    # a.brute_force()
-    # a.print_solution()
+    Sudoku().run()
