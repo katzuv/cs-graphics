@@ -47,14 +47,14 @@ class Cell(ButtonBehavior, Image):
             return
         self._exposed = True
         self.board.increase_exposed()
-        self.source = 'numbers\{}.png'.format(self.number)
+        self.source = 'match_match\{}.png'.format(self.number)
 
         self.board.update_info_label()
 
         if self.number == 0:  # expose neighbors
             for cell in self.board.surrounding_cells(self):
                 if not cell.is_bomb():
-                    cell.expose()
+                    cell._invert_card()
 
     def on_press(self):
         if self.board.game_over or self._exposed:
@@ -102,7 +102,7 @@ class Board(GridLayout):
             self.add_widget(cell)
 
     def _insert_numbers(self):
-        """Insert the numbers of the cells which are not bombs."""
+        """Insert the match_match of the cells which are not bombs."""
         for row, column in product(xrange(self.cols), xrange(self.cols)):
             cell = self.board[row][column]
             if cell.is_bomb():

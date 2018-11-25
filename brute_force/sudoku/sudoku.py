@@ -32,7 +32,7 @@ class Cell(ButtonBehavior, Image):
         """
         logging.info('({}, {}) updated to {}'.format(self.line, self.column, number))
         self.number = number
-        self.source = 'numbers/{}.png'.format(self.number)
+        self.source = 'match_match/{}.png'.format(self.number)
 
 
 class Board(GridLayout):
@@ -69,7 +69,7 @@ class Board(GridLayout):
                 continue
             current_cell = self.board[row][column]
             if current_cell.number == cell.number:
-                if any((current_cell.line == cell.line,  # check if there are two identical numbers in a row
+                if any((current_cell.line == cell.line,  # check if there are two identical match_match in a row
                         current_cell.column == cell.column,  # column
                         current_cell.line / 2 == cell.line / 2 and current_cell.column / 3 == cell.column / 3)):  # box
                     return False
